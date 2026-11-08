@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "scenario_id": "ODC-NOMINAL-001",
+  "name": "Orbital data node nominal service",
+  "description": "Conceptual ground/simulation scenario for local ingest, integrity verification, and delayed ground synchronization.",
+  "classification": "illustrative_simulation_only",
+  "seed": 20261108,
+  "initial_state": {
+    "lifecycle": "INIT",
+    "power_bus_pct": 98,
+    "thermal_margin_pct": 92,
+    "storage_capacity_pct": 35,
+    "earth_link": "AVAILABLE",
+    "integrity_monitor": "HEALTHY"
+  },
+  "events": [
+    {"at_seconds": 0, "type": "LIFECYCLE_TRANSITION", "target": "system", "value": "NOMINAL"},
+    {"at_seconds": 10, "type": "DATA_INGEST", "target": "telemetry_queue", "value": "nominal_batch"},
+    {"at_seconds": 20, "type": "INTEGRITY_CHECK", "target": "storage_pool", "value": "PASS"},
+    {"at_seconds": 30, "type": "GROUND_SYNC", "target": "downlink_queue", "value": "ACKNOWLEDGED"}
+  ],
+  "expected_outcomes": [
+    "system_reaches_nominal",
+    "integrity_check_passes",
+    "ground_sync_acknowledged",
+    "event_log_is_replayable"
+  ]
+}
