@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "scenario_id": "ODC-DEGRADED-001",
+  "name": "Orbital data node link and thermal degradation",
+  "description": "Conceptual fault scenario for delayed connectivity and thermal-driven workload reduction.",
+  "classification": "illustrative_simulation_only",
+  "seed": 20261109,
+  "initial_state": {
+    "lifecycle": "NOMINAL",
+    "power_bus_pct": 88,
+    "thermal_margin_pct": 64,
+    "storage_capacity_pct": 72,
+    "earth_link": "AVAILABLE",
+    "integrity_monitor": "HEALTHY"
+  },
+  "events": [
+    {"at_seconds": 5, "type": "LINK_STATE", "target": "earth_link", "value": "UNAVAILABLE"},
+    {"at_seconds": 8, "type": "LIFECYCLE_TRANSITION", "target": "system", "value": "DEGRADED"},
+    {"at_seconds": 10, "type": "WORKLOAD_THROTTLE", "target": "edge_compute", "value": "THERMAL_LIMIT"},
+    {"at_seconds": 15, "type": "QUEUE_PERSIST", "target": "downlink_queue", "value": "ENABLED"},
+    {"at_seconds": 25, "type": "LINK_STATE", "target": "earth_link", "value": "AVAILABLE"},
+    {"at_seconds": 30, "type": "GROUND_SYNC", "target": "downlink_queue", "value": "REPLAY_PENDING"}
+  ],
+  "expected_outcomes": [
+    "local_operations_continue",
+    "workload_throttle_is_logged",
+    "queued_data_is_preserved",
+    "ground_sync_replays_after_link_restore",
+    "recovery_requires_integrity_verification"
+  ]
+}
